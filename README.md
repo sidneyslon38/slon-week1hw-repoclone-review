@@ -518,3 +518,5 @@ All narrative text as HTML
 All R output (tables, charts) as HTML/JavaScript
 CSS and JavaScript libraries needed to display interactive elements
 In your case, index.Rmd → knit → executes all the R keyword-counting code → DT creates DataTables HTML → index.html is the final output.
+
+## Cloning repositories is a great way to set up templates for future similar projects!
