@@ -360,9 +360,161 @@ Scalable - Currently has ~30 options on each side
 No database needed - Simple file-based solution for static data
 This is why JSON is used everywhere in web development - it's the perfect bridge between data storage and dynamic web content!
 
-## 3. 
+## 3. Inside Climate News Human Rights Reports Changes Tracking
 
-Repository URL: https://github.com/AJInteractive/UNHumanitarianSpending.git
+Repository URL: https://github.com/InsideClimateNews/2025-08-state-department-human-rights.git
 
 ### Questions I asked the chatbot
-#### Q1: It looks like this site isn't live anymore, and when I view the URL it brings me to the coded in 404.html page. What was it originally coded to do, and what is the benefit of coding in a 404 page?
+#### Q1: How does this code use python to search for and analyze key words?
+
+A: This project actually uses R, not Python, to search for and analyze keywords. Here's how it works:
+
+Keyword Search & Analysis Process
+1. Web Scraping (scraper.R):
+
+Downloads HTML files from State Department reports (2016-2023)
+Extracts the country name from page titles
+Pulls report text from HTML elements with class .report__main p
+Stores all text in a tibble (R data frame)
+2. Keyword Extraction (index.Rmd:32-48):
+
+Uses regex patterns to search for specific terms in each report
+Examples: "human rights", "indigenous", "climate change", "corruption", "torture"
+Uses str_extract_all() with case-insensitive matching to find all occurrences
+Counts total mentions of each term per document
+3. Analysis & Aggregation (index.Rmd:52-76):
+
+Groups data by year
+Calculates mention rates per 100,000 words (normalized metric)
+Creates a summary table showing how keyword mentions have changed over time
+The analysis revealed that mentions of "indigenous rights" and "climate change" decreased significantly in the 2024 reports
+The key R packages used are tidyverse (for data manipulation) and tidytext/quanteda (for text analysis). The workflow compares trends across 9 years of reports to identify changes in emphasis.
+
+#### Q2: When I view the preview of this file, it brings me to a neatly organized page explaining the code with boxed-in tables and multiple web pages to flip through. Can you find and explain the section of the code that specifically creates boxed data tables and multiple web pages?
+
+A: The Boxed Tables and Multiple Pages Code
+Your file uses DataTables, a jQuery plugin that creates interactive, searchable tables with pagination. Here are the key sections:
+
+1. DataTables Library (Lines 2450-2500+)
+The HTML includes the complete DataTables JavaScript library, which provides:
+
+Sortable columns - Click column headers to sort
+Search functionality - Filter table rows in real-time
+Pagination - "Previous/Next" buttons to flip through pages
+Styling - The boxed appearance comes from CSS rules like:
+
+table.dataTable {
+  width:100%;
+  margin:0 auto;
+  clear:both;
+  border-collapse:separate;
+  border-spacing:0;
+}
+
+table.dataTable>thead>tr>th,
+table.dataTable>tfoot>tr>th {
+  padding:10px;
+  border-bottom:1px solid rgba(0, 0, 0, 0.3);
+}
+
+2. Creating the Data Tables in R
+Looking at your index.Rmd:189-197, the actual table creation uses the DT::datatable() function:
+
+datatable()
+
+This R function (from the DT package) wraps the DataTables JavaScript library and automatically:
+
+Generates the boxed table styling
+Creates navigation buttons for multiple pages
+Adds search boxes
+Handles sorting
+3. Multiple Pages Implementation
+The pagination comes from DataTables' sPaginationType setting (visible in the CSS). When you have more rows than fit on one page, it automatically:
+
+Breaks data into chunks (default 10 rows per page)
+Creates "Previous/Next" buttons
+Shows "Page X of Y" information
+The code you see in index.html:2725 handles the styling of these pagination buttons:
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+  box-sizing:border-box;
+  display:inline-block;
+  min-width:1.5em;
+  padding:.5em 1em;
+  margin-left:2px;
+}
+
+In summary: The R code (DT::datatable()) calls the JavaScript DataTables library, which automatically generates the interactive boxed tables with search, sorting, and multi-page navigation all built in.
+
+#### Q3: Could this file be easily repurposed for a different document scraping purpose?
+
+A: Yes, this project is moderately repurposable with varying levels of effort:
+
+Easy to adapt (scraper.R):
+
+The HTML parsing structure relies on two CSS selectors: title for the document name and .report__main p for content
+If your new source has predictable HTML structure and similar CSS classes/IDs, you'd mainly need to change:
+The file path loop (html/{year})
+The CSS selectors (.report__main p → whatever class/ID contains your content)
+The country name extraction logic
+Example: If scraping newspaper articles with article tags, you'd swap .report__main p for article and adjust the metadata parsing.
+
+More work (index.Rmd):
+
+The keyword analysis is highly specific to human rights language (indigenous, lgbt, torture, climate change, etc.)
+For a different topic, you'd need to redefine all ~17 keywords/phrases to match your domain
+The data pipeline itself is reusable: extract text → count mentions → aggregate by time/grouping → render interactive tables
+
+What's already reusable:
+
+The tidyverse/rvest web scraping pattern
+The str_extract_all() + regex approach for keyword extraction
+The aggregation and summarization logic
+The DT::datatable() rendering (works with any data frame)
+
+Bottom line: The framework is portable, but the content is specialized. You'd spend ~30% effort adapting the scraper and ~70% on redefining keywords and analysis logic for a new domain.
+
+#### Q4: Where do you code R markdown script, and how does it generate an HTML file?
+
+A: R Markdown scripts (.Rmd files) are typically coded in:
+
+RStudio (most common) — dedicated IDE with built-in Markdown editor and "Knit" button
+VS Code with R extensions
+Any text editor (the file is just plain text with code blocks)
+How it generates HTML:
+
+You write the .Rmd file — contains YAML header, narrative text, and R code blocks (wrapped in ```{r} ... ```)
+
+You click "Knit" (or run rmarkdown::render() in R) — triggers the compilation process:
+
+knitr package executes all R code blocks and captures their output
+R's tidyverse, DT, etc. packages generate tables, plots, and data visualizations
+The output (tables, stats) gets embedded back into the document
+pandoc converts the merged Markdown → HTML:
+
+Markdown text becomes HTML paragraphs, headers, lists
+Inline code blocks become <pre> and <code> tags
+R-generated content (like DT::datatable()) outputs as HTML <table> tags with embedded JavaScript
+Final HTML file contains:
+
+All narrative text as HTML
+All R output (tables, charts) as HTML/JavaScript
+CSS and JavaScript libraries needed to display interactive elements
+In your case, index.Rmd → knit → executes all the R keyword-counting code → DT creates DataTables HTML → index.html is the final output.`)
+
+You click "Knit" (or run rmarkdown::render() in R) — triggers the compilation process:
+
+knitr package executes all R code blocks and captures their output
+R's tidyverse, DT, etc. packages generate tables, plots, and data visualizations
+The output (tables, stats) gets embedded back into the document
+pandoc converts the merged Markdown → HTML:
+
+Markdown text becomes HTML paragraphs, headers, lists
+Inline code blocks become <pre> and <code> tags
+R-generated content (like DT::datatable()) outputs as HTML <table> tags with embedded JavaScript
+Final HTML file contains:
+
+All narrative text as HTML
+All R output (tables, charts) as HTML/JavaScript
+CSS and JavaScript libraries needed to display interactive elements
+In your case, index.Rmd → knit → executes all the R keyword-counting code → DT creates DataTables HTML → index.html is the final output.
