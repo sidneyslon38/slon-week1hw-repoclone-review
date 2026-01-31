@@ -510,8 +510,8 @@ The output (tables, stats) gets embedded back into the document
 pandoc converts the merged Markdown → HTML:
 
 Markdown text becomes .html paragraphs, headers, lists
-Inline code blocks become <pre> and <code> tags
-R-generated content (like DT::datatable()) outputs as HTML <table> tags with embedded JavaScript
+Inline code blocks become pre and code tags
+R-generated content (like DT::datatable()) outputs as HTML table tags with embedded JavaScript
 Final HTML file contains:
 
 All narrative text as HTML
