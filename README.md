@@ -190,3 +190,179 @@ Re-run the R script
 It will regenerate map.html with the hover effect
 The boundaries will appear gray and subtle, then highlight bold when you hover
 This is a one-parameter addition — very straightforward!
+
+## 2. Al Jazeera UN Humanitarian Spending Quiz
+
+Repository URL: https://github.com/AJInteractive/UNHumanitarianSpending.git
+
+### Questions I asked the chatbot
+#### Q1: It looks like this site isn't live anymore, and when I view the URL it brings me to the coded in 404.html page. What was it originally coded to do, and what is the benefit of coding in a 404 page?
+
+A: This was an interactive quiz/game created by Al Jazeera Labs titled "Where do we spend more money?" The site tested users' knowledge about annual global humanitarian spending.
+
+The quiz worked by:
+
+Presenting two side-by-side scenarios (e.g., "Humanitarian assistance for Syrian refugees" vs "Providing makeup to celebrities")
+Asking users to guess which one costs more money annually
+Showing real UN humanitarian funding data compared to consumer spending
+Keeping track of the user's score and high score
+Displaying funding gaps (money received vs. money still needed) for humanitarian causes
+The data came from UN sources and compared serious humanitarian needs (refugee aid, child protection, food security) with consumer spending on things like pet costumes, energy drinks, and cosmetics—highlighting the disparity between humanitarian funding and commercial spending.
+
+Benefits of coding in a 404 page:
+Having a custom 404 page provides several important benefits:
+
+User experience - Instead of seeing a confusing browser error, visitors get a styled page that matches the site's branding and clearly explains what happened
+
+Navigation help - A good 404 page can guide users back to working parts of the site or suggest alternatives
+
+Professionalism - It shows attention to detail and makes the site feel more polished
+
+Analytics - You can track when users hit broken links or incorrect URLs to identify and fix problems
+
+SEO benefits - Search engines view proper error handling positively, and it prevents broken pages from damaging your site's reputation
+
+In this case, since the site is no longer hosted on Al Jazeera's servers, the 404 page serves its exact purpose—gracefully handling the "page not found" situation.
+
+#### Q2: How are there different quiz images set up without building multiple html pages?
+
+A: The quiz uses dynamic content loading with JavaScript to show different images without building multiple HTML pages. Here's how it works:
+
+The Single Page Architecture:
+1. Static HTML Template (index.html)
+
+Has only TWO section containers: #section1 and #section2
+These are empty shells that get filled with content dynamically
+The HTML never changes—it's just a template
+2. Data Storage (dataset.json)
+
+Contains all quiz data in JSON format
+Each entry includes:
+question: the quiz question
+hint: additional context
+value: the monetary amount
+image: path to the image file (e.g., "img/L3.jpg")
+Funding statistics
+3. JavaScript Magic (quizz.js)
+
+The key technique is using jQuery's .css() method to dynamically change background images:
+
+$("#section1").css("background-image", "url(" + leftdata[currentleft].image + ")");
+$("#section2").css("background-image", "url(" + rightdata[currentright].image + ")");
+
+How it works:
+
+Loads random quiz items from the JSON data
+Extracts the image path from the data (like "img/L3.jpg")
+Uses JavaScript to set the CSS background-image property
+When user answers, it loads new data and swaps the images again
+Preloads next images for smooth transitions
+This is called a Single Page Application (SPA) approach—one HTML file dynamically updates its content using JavaScript and data files. Much more efficient than creating dozens of separate HTML pages for each quiz question!
+
+#### Q3: Was the text coded to overlay the images, or did the images already have text overlay?
+
+A: The text is coded to overlay the images through CSS. The images themselves are plain photographs without any text.
+
+Here's how it works:
+
+CSS Overlay Technique:
+1. Images as Backgrounds:
+
+#section1 {
+  background-image: url(../img/L3.jpg);
+  background-size: cover;
+  background-position: center center;
+}
+
+The images are set as full-screen background images
+
+2. Text Elements Positioned on Top:
+
+.headingone, .headingtwo {
+  padding: 10px;
+  font-size: 3em;
+  font-weight: 900;
+  text-shadow: 1px 1px #333333;  /* Shadow for readability */
+}
+
+.moneyone, .moneytwo {
+  position: absolute;  /* Key: positioned over the image */
+  text-align: center;
+  top: 65%;           /* 65% down from top */
+  left: 0;
+  right: 0;
+  color: #fb9d04;     /* Orange color */
+  font-size: 6em;
+}
+
+3. Text Shadow for Readability:
+The text-shadow: 1px 1px #333333 ensures white text is readable even on light backgrounds.
+
+This approach is much more flexible than burning text into images because:
+
+Text can be dynamically changed by JavaScript
+Text remains searchable and accessible
+Easy to update content without re-editing images
+Supports multiple languages/translations
+Better for SEO and screen readers
+The plain photo images are stored in the img folder, and the HTML/CSS layers the quiz questions, hints, and monetary values on top.
+
+#### Q4: What is a .json file? And how was this used to populate the quiz options?
+
+A: JSON stands for "JavaScript Object Notation" - it's a standardized format for storing and exchanging data in a way that's easy for both humans to read and computers to process.
+
+Think of it as a structured filing system where data is organized in a predictable pattern using:
+
+Curly braces {} for objects (like a container)
+Square brackets [] for arrays/lists
+Key-value pairs like "question": "Healthcare of the Libyans"
+Data types: strings (text in quotes), numbers, booleans (true/false)
+JSON is language-independent, meaning any programming language can read and write it - making it perfect for data exchange.
+
+How this JSON file populated the quiz:
+The dataset.json file is structured with two main arrays:
+
+1. dataone - Humanitarian spending (left side of quiz)
+2. datatwo - Consumer/military spending (right side of quiz)
+
+Each entry contains all the data needed for one quiz option:
+
+{
+  "question": "Healthcare of the Libyans",
+  "hint": "An estimated 1.9 million...",
+  "value": "$7m",
+  "money": 7,
+  "image": "img/L7.jpg",
+  "outstandingcash": "$35m",
+  "outstanding": 35,
+  ...
+}
+
+The JavaScript reads this file:
+
+$.getJSON("dataset.json", function(obj) {
+  // Random selection from humanitarian data
+  leftdata.push(obj.dataone[Math.floor(Math.random() * obj.dataone.length)]);
+  
+  // Random selection from consumer spending data
+  rightdata.push(obj.datatwo[Math.floor(Math.random() * obj.datatwo.length)]);
+  
+  // Populate the HTML elements
+  $(".headingone").html(leftdata[0].question);
+  $(".infoone").html(leftdata[0].hint);
+  $("#section1").css("background-image", "url(" + leftdata[0].image + ")");
+}
+
+The benefits:
+Separation of content from code - Update quiz data without touching HTML/JavaScript
+Easy to add questions - Just add another object to the array
+Scalable - Currently has ~30 options on each side
+No database needed - Simple file-based solution for static data
+This is why JSON is used everywhere in web development - it's the perfect bridge between data storage and dynamic web content!
+
+## 3. 
+
+Repository URL: https://github.com/AJInteractive/UNHumanitarianSpending.git
+
+### Questions I asked the chatbot
+#### Q1: It looks like this site isn't live anymore, and when I view the URL it brings me to the coded in 404.html page. What was it originally coded to do, and what is the benefit of coding in a 404 page?
