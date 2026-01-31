@@ -507,10 +507,9 @@ You click "Knit" (or run rmarkdown::render() in R) — triggers the compilation 
 knitr package executes all R code blocks and captures their output
 R's tidyverse, DT, etc. packages generate tables, plots, and data visualizations
 The output (tables, stats) gets embedded back into the document
-pandoc converts the merged Markdown → HTML:
+pandoc converts the merged Markdown → HTML
 
-Markdown text becomes .html paragraphs, headers, lists
-Inline code blocks become pre and code tags
+Markdown text becomes .html paragraphs, headers, lists Inline code blocks become pre and code tags
 R-generated content (like DT::datatable()) outputs as HTML table tags with embedded JavaScript
 Final HTML file contains:
 
@@ -518,5 +517,3 @@ All narrative text as HTML
 All R output (tables, charts) as HTML/JavaScript
 CSS and JavaScript libraries needed to display interactive elements
 In your case, index.Rmd → knit → executes all the R keyword-counting code → DT creates DataTables HTML → index.html is the final output.
-
-## Cloning repositories is a great way to set up templates for future similar projects!
